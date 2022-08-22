@@ -24,7 +24,7 @@ module.exports = {
   publicPath,
   assetsDir,
   outputDir,
-  lintOnSave,
+  // lintOnSave,
   transpileDependencies,
   devServer: {
     hot: true,

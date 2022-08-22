@@ -68,6 +68,7 @@ export default {
     exportZip: '导出 Zip',
     theme: '换肤',
     clipboard: '粘贴板',
+    css: 'CSS',
     i18n: '国际化',
     externalLink: '外链',
     profile: '个人中心'

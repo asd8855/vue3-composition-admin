@@ -34,7 +34,7 @@ app.use(koaBody());
 
 app.use( async (ctx,next)=>{
   await next()
-  // log4.debug(chalk.green('请求路径:  ') + ctx.request.url);
+  log4.debug(chalk.green('请求路径:  ') + ctx.request.url);
   log4.debug(chalk.green('请求body:  ') + JSON.stringify(ctx.request.body));
   log4.debug(chalk.green('返回数据:  ')+ JSON.stringify(ctx.body));
 })
