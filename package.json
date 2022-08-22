@@ -28,6 +28,7 @@
     "driver.js": "^0.9.8",
     "echarts": "^5.0.0",
     "element-plus": "^1.0.2-beta.35",
+    "fabric": "^5.2.1",
     "faker": "^5.1.0",
     "file-saver": "^2.0.5",
     "js-cookie": "^2.2.1",

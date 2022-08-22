@@ -71,7 +71,10 @@ export default {
     css: 'CSS',
     i18n: '国际化',
     externalLink: '外链',
-    profile: '个人中心'
+    profile: '个人中心',
+    fabric: 'Fabric',
+    basicGraph: '基础图形',
+    start: '起步'
   },
   navbar: {
     logOut: '退出登录',

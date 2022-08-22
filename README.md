@@ -274,3 +274,6 @@ Modern browsers and Internet Explorer 10+.
 [MIT](https://github.com/rcyj-FED/vue3-composition-admin/blob/main/LICENSE)
 
 Copyright (c) 2021-present 
+
+
+http://k21vin.gitee.io/front-end-data-visualization/#/fabric/fabric-basic/fabric-text
