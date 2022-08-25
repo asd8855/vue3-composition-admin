@@ -42,6 +42,18 @@ const fabricRouter: Array<RouteRecordRaw> = [
           title: 'basicGraph',
           noCache: true
         }
+      },
+      {
+        path: 'filter',
+        component: () =>
+          import(
+            /* webpackChunkName: "BarChart" */ '@/views/fabricJS/base/Filter.vue'
+          ),
+        name: 'Filter',
+        meta: {
+          title: 'filter',
+          noCache: true
+        }
       }
     ]
 

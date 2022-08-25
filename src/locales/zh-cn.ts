@@ -74,7 +74,8 @@ export default {
     profile: '个人中心',
     fabric: 'Fabric',
     basicGraph: '基础图形',
-    start: '起步'
+    start: '起步',
+    filter: '滤镜'
   },
   navbar: {
     logOut: '退出登录',
