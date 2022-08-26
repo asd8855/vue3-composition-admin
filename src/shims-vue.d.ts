@@ -20,4 +20,4 @@ declare module 'vue-count-to'
 // TODO: remove this part after vue-image-crop-upload has its typescript file
 declare module 'vue-image-crop-upload'
 
-declare module 'fabric'
+// declare module 'fabric'

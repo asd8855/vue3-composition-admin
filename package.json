@@ -29,7 +29,7 @@
     "driver.js": "^0.9.8",
     "echarts": "^5.0.0",
     "element-plus": "^1.0.2-beta.35",
-    "fabric": "^5.2.1",
+    "fabric": "5.2.4",
     "faker": "^5.1.0",
     "file-saver": "^2.0.5",
     "js-cookie": "^2.2.1",
@@ -112,14 +112,5 @@
     "vue-cli-plugin-style-resources-loader": "^0.1.4",
     "vue-jest": "^5.0.0-alpha.8",
     "webpackbar": "^5.0.0-3"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,vue,ts,tsx}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
   }
 }

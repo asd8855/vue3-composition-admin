@@ -277,3 +277,15 @@ Copyright (c) 2021-present
 
 
 http://k21vin.gitee.io/front-end-data-visualization/#/fabric/fabric-basic/fabric-text
+
+https://photokit.com/editor/?lang=zh
+
+  // "gitHooks": {
+  //   "pre-commit": "lint-staged"
+  // },
+  // "lint-staged": {
+  //   "*.{js,jsx,vue,ts,tsx}": [
+  //     "vue-cli-service lint",
+  //     "git add"
+  //   ]
+  // }

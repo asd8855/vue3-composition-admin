@@ -51,7 +51,7 @@ specifiers:
   eslint-plugin-promise: ^4.2.1
   eslint-plugin-standard: ^4.0.0
   eslint-plugin-vue: ^7.0.0-0
-  fabric: ^5.2.1
+  fabric: 5.2.4
   faker: ^5.1.0
   file-saver: ^2.0.5
   js-cookie: ^2.2.1
