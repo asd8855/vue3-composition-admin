@@ -275,7 +275,6 @@ Modern browsers and Internet Explorer 10+.
 
 Copyright (c) 2021-present 
 
-
 http://k21vin.gitee.io/front-end-data-visualization/#/fabric/fabric-basic/fabric-text
 
 https://photokit.com/editor/?lang=zh

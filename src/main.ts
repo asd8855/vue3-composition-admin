@@ -16,8 +16,12 @@ import '@/styles/index.scss'
 import 'normalize.css'
 import * as directives from '@/directives'
 import '@/permission'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 const app = createApp(App)
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
 // 加载所有插件
 loadAllPlugins(app)
 

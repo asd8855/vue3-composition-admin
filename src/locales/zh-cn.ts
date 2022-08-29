@@ -75,7 +75,8 @@ export default {
     fabric: 'Fabric',
     basicGraph: '基础图形',
     start: '起步',
-    filter: '滤镜'
+    filter: '滤镜',
+    filter2: '滤镜2'
   },
   navbar: {
     logOut: '退出登录',

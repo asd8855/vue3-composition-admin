@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@dragndrop/vue-dropzone': 0.0.4
+  '@element-plus/icons-vue': ^2.0.9
   '@tinymce/tinymce-vue': ^4.0.0
   '@types/clipboard': ^2.0.1
   '@types/fabric': ^4.5.11
@@ -97,6 +98,7 @@ specifiers:
 
 dependencies:
   '@dragndrop/vue-dropzone': 0.0.4
+  '@element-plus/icons-vue': 2.0.9_vue@3.2.7
   '@tinymce/tinymce-vue': 4.0.7_vue@3.2.7
   '@types/fabric': 4.5.11
   axios-mapper: 0.5.9
@@ -1454,6 +1456,14 @@ packages:
       '@dragndrop/draggable': 0.1.6
       '@dragndrop/dropzone': 0.1.6
       '@material/dom': 4.0.0
+    dev: false
+
+  /@element-plus/icons-vue/2.0.9_vue@3.2.7:
+    resolution: {integrity: sha512-okdrwiVeKBmW41Hkl0eMrXDjzJwhQMuKiBOu17rOszqM+LS/yBYpNQNV5Jvoh06Wc+89fMmb/uhzf8NZuDuUaQ==}
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      vue: 3.2.7
     dev: false
 
   /@element-plus/icons/0.0.11:

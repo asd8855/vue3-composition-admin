@@ -1,7 +1,139 @@
 <template>
   <div class="box flex">
     <div style="width: 600px;margin-right: 16px;">
+      <el-checkbox
+        v-model="grayscale"
+        label="Grayscale<灰度模式>"
+        size="large"
+        @change="changeGrayscale"
+      />
+      <el-radio-group
+        v-model="grayscaleMode"
+        @change="changeGrayscaleMode"
+      >
+        <el-radio
+          label="average"
+          size="large"
+        >
+          average | 平均
+        </el-radio>
+        <el-radio
+          label="luminosity"
+          size="large"
+        >
+          luminosity | 亮度
+        </el-radio>
+        <el-radio
+          label="lightness"
+          size="large"
+        >
+          lightness |光度
+        </el-radio>
+      </el-radio-group>
+
+      <el-checkbox
+        v-model="invert"
+        label="Invert<倒置>"
+        size="large"
+        @change="changeInvert"
+      />
+
+      <p>色彩矩阵</p>
+      <el-checkbox
+        v-model="sepia"
+        label="Sepia<深褐色>"
+        size="large"
+        @change="changeSepia"
+      />
+      <el-checkbox
+        v-model="bw"
+        label="Black/White"
+        size="large"
+        @change="changeBW"
+      />
+      <el-checkbox
+        v-model="brownie"
+        label="Brownie"
+        size="large"
+        @change="changeBrownie"
+      />
+      <el-checkbox
+        v-model="vintage"
+        label="Vintage"
+        size="large"
+        @change="changeVintage"
+      />
+      <el-checkbox
+        v-model="kodachrome"
+        label="Kodachrome<柯达彩色胶片>"
+        size="large"
+        @change="changeKodachrome"
+      />
+      <el-checkbox
+        v-model="technicolor"
+        label="Technicolor"
+        size="large"
+        @change="changeTechnicolor"
+      />
+      <el-checkbox
+        v-model="polaroid"
+        label="Polaroid"
+        size="large"
+        @change="changePolaroid"
+      />
       <div>
+        <el-checkbox
+          v-model="brightness"
+          label="Brightness<亮度>"
+          size="large"
+          @change="changeBrightness"
+        />
+        <el-slider
+          v-model="brightnessValue"
+          :min="-1"
+          :max="1"
+          :step="0.01"
+          @change="changeBrightnessValue"
+        />
+        <el-checkbox
+          v-model="gamma"
+          label="Gamma<伽马>"
+          size="large"
+          @change="changeGamma"
+        />
+        <div class="flex">
+          <label style="width: 100px">Red</label>
+          <el-slider
+            style="width: 70%"
+            v-model="gammaRed"
+            :min="0.01"
+            :max="2.2"
+            :step="0.01"
+            @change="changeGammaRed"
+          />
+        </div>
+        <div class="flex">
+          <label style="width: 100px">Green</label>
+          <el-slider
+            style="width: 70%"
+            v-model="gammaGreen"
+            :min="0.01"
+            :max="2.2"
+            :step="0.01"
+            @change="changeGammaGreen"
+          />
+        </div>
+        <div class="flex">
+          <label style="width: 100px">Blue</label>
+          <el-slider
+            style="width: 70%"
+            v-model="gammaBlue"
+            :min="0.01"
+            :max="2.2"
+            :step="0.01"
+            @change="changeGammaBlue"
+          />
+        </div>
         <el-checkbox
           v-model="contrast"
           label="Contrast<对比度>"
@@ -53,6 +185,57 @@
           :max="1"
           :step="0.01"
           @change="changeHueRotationValue"
+        />
+        <el-checkbox
+          v-model="noise"
+          label="Noise<噪波>"
+          size="large"
+          @change="changeNoise"
+        />
+        <el-slider
+          v-model="noiseValue"
+          :min="0"
+          :max="1000"
+          :step="1"
+          @change="changeNoiseValue"
+        />
+        <el-checkbox
+          v-model="pixelate"
+          label="Pixelate<像素化>"
+          size="large"
+          @change="changePixelate"
+        />
+        <el-slider
+          v-model="pixelateValue"
+          :min="2"
+          :max="20"
+          :step="1"
+          @change="changePixelateValue"
+        />
+        <el-checkbox
+          v-model="blur"
+          label="Blur<高斯模糊>"
+          size="large"
+          @change="changeBlur"
+        />
+        <el-slider
+          v-model="blurValue"
+          :min="0"
+          :max="1"
+          :step="0.01"
+          @change="changeBlurValue"
+        />
+        <el-checkbox
+          v-model="sharpen"
+          label="Sharpen<锐化>"
+          size="large"
+          @change="changeSharpen"
+        />
+        <el-checkbox
+          v-model="emboss"
+          label="Emboss<浮雕>"
+          size="large"
+          @change="changeEmboss"
         />
         <div>
           <br>
@@ -109,179 +292,16 @@
     </div>
 
     <canvas
-      id="filter-canvas"
+
+      id="canvas"
       style="border: 1px solid #ccc;"
     />
-  </div>
-  <div
-    v-if="showSettingToolbar"
-    class="controls-wrapper flex content-center"
-  >
-    <el-slider
-      v-if="currentFilterConfig.isSlider"
-      style="width: 50%"
-      v-model="currentFilterConfig.value"
-      :min="currentFilterConfig.min"
-      :max="currentFilterConfig.max"
-      :step="currentFilterConfig.step"
-      @change="changeSlider"
-    />
-    <el-radio-group
-      v-else-if="currentFilterConfig.isRadio"
-      v-model="currentFilterConfig.value"
-      @change="changeGrayscaleMode"
-    >
-      <el-radio
-        label="average"
-        size="large"
-      >
-        average | 平均
-      </el-radio>
-      <el-radio
-        label="luminosity"
-        size="large"
-      >
-        luminosity | 亮度
-      </el-radio>
-      <el-radio
-        label="lightness"
-        size="large"
-      >
-        lightness |光度
-      </el-radio>
-    </el-radio-group>
-    <div
-      v-else-if="currentFilterConfig.isGamma"
-      class="flex content-between items-center"
-      style="width: 100%"
-    >
-      <div
-        class="flex items-center"
-        style="width: 70%"
-      >
-        <label>Red</label>
-        <el-slider
-          style="width: 70%"
-          v-model="gammaRed"
-          :min="0.01"
-          :max="2.2"
-          :step="0.01"
-          @change="changeGammaRed"
-        />
-      </div>
-      <div
-        class="flex items-center"
-        style="width: 70%"
-      >
-        <label>Green</label>
-        <el-slider
-          style="width: 70%"
-          v-model="gammaGreen"
-          :min="0.01"
-          :max="2.2"
-          :step="0.01"
-          @change="changeGammaGreen"
-        />
-      </div>
-      <div
-        class="flex items-center"
-        style="width: 70%"
-      >
-        <label>Blue</label>
-        <el-slider
-          style="width: 70%"
-          v-model="gammaBlue"
-          :min="0.01"
-          :max="2.2"
-          :step="0.01"
-          @change="changeGammaBlue"
-        />
-      </div>
-    </div>
-    <div
-      v-else-if="currentFilterConfig.isBlendColor"
-      class="flex content-between items-center"
-      style="width: 100%"
-    >
-      <div class="flex items-center">
-        <label>Mode</label>
-        <el-select
-          v-model="blendMode"
-          class="m-2"
-          placeholder="Select"
-          size="large"
-          @change="changBlendMode"
-        >
-          <el-option
-            v-for="(item, index) in blendModeList"
-            :key="index"
-            :label="item"
-            :value="item"
-          />
-        </el-select>
-      </div>
-      <div
-        class="flex items-center"
-      >
-        <label>Color</label>
-        <el-color-picker
-          style="width: 70%"
-          v-model="blendColor"
-          size="large"
-          @change="changeBlendColor"
-        />
-      </div>
-      <div
-        class="flex items-center"
-        style="width: 70%"
-      >
-        <label>Alpha</label>
-        <el-slider
-          style="width: 70%"
-          v-model="blendAlpha"
-          :min="0"
-          :max="1"
-          :step="0.01"
-          @change="changeBlendAlpha"
-        />
-      </div>
-    </div>
-  </div>
-  <div class="controls-wrapper flex">
-    <div
-      v-for="item in filters"
-      :key="item.title"
-      class="flex flex-col items-center filter-item"
-      @click="onClickFilter(item)"
-    >
-      <div class="img-container">
-        <img
-          :src="`https://photokit.com/editor//assets/images/filters/square/${item.icon}.jpg`"
-          alt="grayscale"
-          :title="item.title"
-          :class="[item.isChecked ? 'active' : '']"
-        >
-        <!-- <div
-          v-if="item.isChecked && item.hasSetting"
-          class="mask-layer flex items-center content-center"
-          @click.stop="onSetting(item)"
-        >
-          <el-icon
-            :size="20"
-            color="blue"
-          >
-            <Setting />
-          </el-icon>
-        </div> -->
-      </div>
-      <span>{{ item.title }}</span>
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { fabric } from 'fabric'
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, ref } from 'vue'
 import gwen from '../imgs/gwen-spider-verse-ah.jpg'
 
 /**
@@ -304,6 +324,20 @@ import gwen from '../imgs/gwen-spider-verse-ah.jpg'
  * Sepia 色偏
  */
 
+const grayscale = ref(false)
+const grayscaleMode = ref('')
+const invert = ref(false)
+const sepia = ref(false)
+const bw = ref(false)
+const brownie = ref(false)
+const vintage = ref(false)
+const kodachrome = ref(false)
+const technicolor = ref(false)
+const polaroid = ref(false)
+const reverse = ref(false)
+const brightness = ref(false)
+const brightnessValue = ref(0.5)
+const gamma = ref(false)
 const gammaRed = ref(1)
 const gammaGreen = ref(1)
 const gammaBlue = ref(1)
@@ -319,16 +353,29 @@ const vibranceValue = ref(0)
 const hueRotation = ref(false)
 const hueRotationValue = ref(0)
 
+const noise = ref(false)
+const noiseValue = ref(700)
+
+const pixelate = ref(false)
+const pixelateValue = ref(4)
+
+const blur = ref(false)
+const blurValue = ref(0.1)
+
+const sharpen = ref(false)
+const emboss = ref(false)
+
 const blend = ref(false)
 const blendMode = ref('multiply')
 const blendColor = ref('#00f900')
 const blendAlpha = ref(1)
 const blendModeList = ['multiply', 'screen', 'add', 'diff', 'subtract', 'lighten', 'darken', 'exclusion', 'overlay', 'tint']
 
-const currentFilterConfig = ref({})
-const showSettingToolbar = ref(false)
-
+// const getIconURL = (url: string) => {
+//   return new URL(`./imgs/filter/${url}.jpeg`, import.meta.url).href
+// }
 let canvas: fabric.Canvas, f: fabric.IAllFilters
+
 const applyFilter = (index: number, filter: fabric.IAllFilters | fabric.IInvertFilter) => {
   const obj = canvas.getActiveObject()
   if (!obj) return
@@ -397,8 +444,25 @@ const changePolaroid = (value: any) => {
   applyFilter(8, value && new f.Polaroid())
 }
 
+const changeReverse = (value: any) => {
+  applyFilter(9, value && new f.ColorMatrix({
+    matrix: [
+      -1, 0, 0, 0, 255,
+      0, -1, 0, 0, 255,
+      0, 0, -1, 0, 255,
+      0, 0, 0, 1, 0
+    ]
+    // matrix: [
+    //   0.3086, 0.6094, 0.0820, 0, 0,
+    //   0.3086, 0.6094, 0.0820, 0, 0,
+    //   0.3086, 0.6094, 0.0820, 0, 0,
+    //   0, 0, 0, 1, 0
+    // ]
+  }))
+}
+
 const changeBrightness = (value: any) => {
-  applyFilter(9, value && new f.Brightness())
+  applyFilter(9, value && new f.Brightness({ brightness: brightnessValue.value }))
 }
 const changeBrightnessValue = (value: number) => {
   applyFilterValue(9, 'brightness', value)
@@ -409,23 +473,22 @@ const changeGamma = (value: any) => {
 }
 
 const changeGammaRed = (value: number) => {
+  if (!gamma.value) return
   const current = getFilter(10).gamma
-  if (!current.length) return
   current[0] = value
   applyFilterValue(10, 'gamma', current)
 }
 
 const changeGammaGreen = (value: number) => {
+  if (!gamma.value) return
   const current = getFilter(10).gamma
-  if (!current.length) return
-
   current[1] = value
   applyFilterValue(10, 'gamma', current)
 }
 
 const changeGammaBlue = (value: number) => {
+  if (!gamma.value) return
   const current = getFilter(10).gamma
-  if (!current.length) return
   current[2] = value
   applyFilterValue(10, 'gamma', current)
 }
@@ -463,7 +526,7 @@ const changeHueRotationValue = (value: number) => {
 }
 
 const changeNoise = (value: any) => {
-  applyFilter(15, value && new f.Noise())
+  applyFilter(15, value && new f.Noise({ noise: noiseValue.value }))
 }
 
 const changeNoiseValue = (value: number) => {
@@ -471,7 +534,7 @@ const changeNoiseValue = (value: number) => {
 }
 
 const changePixelate = (value: any) => {
-  applyFilter(16, value && new f.Pixelate())
+  applyFilter(16, value && new f.Pixelate({ blocksize: pixelateValue.value }))
 }
 
 const changePixelateValue = (value: number) => {
@@ -479,7 +542,7 @@ const changePixelateValue = (value: number) => {
 }
 
 const changeBlur = (value: any) => {
-  applyFilter(17, value && new f.Blur())
+  applyFilter(17, value && new f.Blur({ blur: blurValue.value }))
 }
 
 const changeBlurValue = (value: number) => {
@@ -526,9 +589,6 @@ const filters = ref([
     icon: 'grayscale',
     title: 'Grayscale',
     isChecked: false,
-    isRadio: true,
-    hasSetting: true,
-    value: 'average',
     func: (bool: Boolean) => {
       changeGrayscale(bool)
     }
@@ -614,15 +674,9 @@ const filters = ref([
   //   }
   // },
   {
-    icon: 'brightness',
-    title: 'Brightness',
+    icon: 'Brightness',
+    title: 'brightness',
     isChecked: false,
-    hasSetting: true,
-    isSlider: true,
-    min: -1,
-    max: 1,
-    step: 0.01,
-    value: 0.5,
     func: (bool: Boolean) => {
       changeBrightness(bool)
     }
@@ -631,11 +685,6 @@ const filters = ref([
     icon: 'gamma',
     title: 'Gamma',
     isChecked: false,
-    hasSetting: true,
-    isGamma: true,
-    redValue: 1,
-    Green: 1,
-    Blue: 1,
     func: (bool: Boolean) => {
       changeGamma(bool)
     }
@@ -644,26 +693,14 @@ const filters = ref([
     icon: 'noise',
     title: 'Noise',
     isChecked: false,
-    hasSetting: true,
-    isSlider: true,
-    min: 0,
-    max: 1000,
-    step: 1,
-    value: 700,
     func: (bool: Boolean) => {
       changeNoise(bool)
     }
   },
   {
     icon: 'pixelate',
-    title: 'Pixelate',
-    hasSetting: true,
+    title: 'pixelate',
     isChecked: false,
-    isSlider: true,
-    min: 2,
-    max: 20,
-    step: 1,
-    value: 4,
     func: (bool: Boolean) => {
       changePixelate(bool)
     }
@@ -672,12 +709,6 @@ const filters = ref([
     icon: 'blur',
     title: 'Blur',
     isChecked: false,
-    hasSetting: true,
-    isSlider: true,
-    min: 0,
-    max: 1,
-    step: 0.01,
-    value: 0.5,
     func: (bool: Boolean) => {
       changeBlur(bool)
     }
@@ -694,8 +725,6 @@ const filters = ref([
     icon: 'blendColor',
     title: 'Blend Color',
     isChecked: false,
-    hasSetting: true,
-    isBlendColor: true,
     func: (bool: Boolean) => {
       changeBlend(bool)
     }
@@ -704,34 +733,14 @@ const filters = ref([
 
 const init = () => {
   fabric.Image.fromURL(gwen, img => {
-    canvas = new fabric.Canvas('filter-canvas', { width: img.width, height: img.height })
+    canvas = new fabric.Canvas('canvas', { width: img.width, height: img.height })
     f = fabric.Image.filters
     canvas.add(img)
   })
 }
-
-const changeSlider = (value) => {
-  if (currentFilterConfig.value.icon === 'brightness') {
-    changeBrightnessValue(value)
-  } else if (currentFilterConfig.value.icon === 'noise') {
-    changeNoiseValue(value)
-  } else if (currentFilterConfig.value.icon === 'pixelate') {
-    changePixelateValue(value)
-  } else if (currentFilterConfig.value.icon === 'blur') {
-    changeBlurValue(value)
-  }
-}
-
 const onClickFilter = (item: any) => {
   item.isChecked = !item.isChecked
   item.func(item.isChecked)
-  if (item.hasSetting && item.isChecked) {
-    showSettingToolbar.value = true
-    currentFilterConfig.value = item
-    changeSlider(item.value)
-  } else {
-    showSettingToolbar.value = false
-  }
 }
 
 const onSave = () => {
@@ -746,7 +755,6 @@ const onSave = () => {
 
 onMounted(() => {
   init()
-  // setImg()
 })
 
 </script>
@@ -764,61 +772,7 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.items-center {
+.align-center {
   align-items: center
-}
-
-.content-center {
-  justify-content: center
-}
-
-.content-between {
-  justify-content: space-between;
-}
-
-.controls-wrapper {
-  background-color: #000;
-  padding: 8px 16px;
-  overflow-x: scroll;
-  .filter-item {
-    margin: 8px;
-  }
-
-  .img-container {
-    position: relative;
-  }
-
-  .mask-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #fff;
-    opacity: 0.8
-  }
-
-  img {
-    width: 64px;
-    height: 64px;
-    border-radius: 4px;
-    border: 2px solid transparent;
-    display: block;
-  }
-
-  .active {
-    border-color: blue;
-  }
-
-  span {
-    font-size: 12px;
-    color: #fff;
-  }
-
-  label {
-    font-size: 14px;
-    color: #fff;
-    margin-right: 16px;
-  }
 }
 </style>
