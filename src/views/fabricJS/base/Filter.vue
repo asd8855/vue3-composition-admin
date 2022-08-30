@@ -1,121 +1,14 @@
 <template>
-  <div class="box flex">
-    <div style="width: 600px;margin-right: 16px;">
-      <div>
-        <el-checkbox
-          v-model="contrast"
-          label="Contrast<对比度>"
-          size="large"
-          @change="changeContrast"
-        />
-        <el-slider
-          v-model="contrastValue"
-          :min="-1"
-          :max="1"
-          :step="0.01"
-          @change="changeContrastValue"
-        />
-        <el-checkbox
-          v-model="saturation"
-          label="Saturation<饱和度>"
-          size="large"
-          @change="changeSaturation"
-        />
-        <el-slider
-          v-model="saturationValue"
-          :min="-1"
-          :max="1"
-          :step="0.01"
-          @change="changeSaturationValue"
-        />
-        <el-checkbox
-          v-model="vibrance"
-          label="Vibrance<自然饱和度>"
-          size="large"
-          @change="changeVibrance"
-        />
-        <el-slider
-          v-model="vibranceValue"
-          :min="-1"
-          :max="1"
-          :step="0.01"
-          @change="changeVibranceValue"
-        />
-        <el-checkbox
-          v-model="hueRotation"
-          label="HueRotation<色相旋转>"
-          size="large"
-          @change="changeHueRotation"
-        />
-        <el-slider
-          v-model="hueRotationValue"
-          :min="-1"
-          :max="1"
-          :step="0.01"
-          @change="changeHueRotationValue"
-        />
-        <div>
-          <br>
-          <el-checkbox
-            v-model="blend"
-            label="BlendColor"
-            size="large"
-            @change="changeBlend"
-          />
-        </div>
-
-        <div class="flex">
-          <label style="width: 100px">Mode</label>
-          <el-select
-            v-model="blendMode"
-            class="m-2"
-            placeholder="Select"
-            size="large"
-            @change="changBlendMode"
-          >
-            <el-option
-              v-for="(item, index) in blendModeList"
-              :key="index"
-              :label="item"
-              :value="item"
-            />
-          </el-select>
-        </div>
-        <div class="flex">
-          <label style="width: 100px">Color</label>
-          <el-color-picker
-            style="width: 70%"
-            v-model="blendColor"
-            size="large"
-            @change="changeBlendColor"
-          />
-        </div>
-        <div class="flex">
-          <label style="width: 100px">Alpha</label>
-          <el-slider
-            style="width: 70%"
-            v-model="blendAlpha"
-            :min="0"
-            :max="1"
-            :step="0.01"
-            @change="changeBlendAlpha"
-          />
-        </div>
-
-        <el-button @click="onSave">
-          保存
-        </el-button>
-      </div>
-    </div>
-
+  <h2>Fabric.js: 5.2.4</h2>
+  <div class="box flex content-center">
     <canvas
       id="filter-canvas"
-      style="border: 1px solid #ccc;"
+      style="border: 1px solid #ccc"
     />
   </div>
   <div
-    v-if="showSettingToolbar"
     class="controls-wrapper flex content-center"
+    style="height: 60px"
   >
     <el-slider
       v-if="currentFilterConfig.isSlider"
@@ -220,9 +113,7 @@
           />
         </el-select>
       </div>
-      <div
-        class="flex items-center"
-      >
+      <div class="flex items-center">
         <label>Color</label>
         <el-color-picker
           style="width: 70%"
@@ -255,24 +146,13 @@
       @click="onClickFilter(item)"
     >
       <div class="img-container">
+        <!-- :src="`https://photokit.com/editor//assets/images/filters/square/${item.icon}.jpg`" -->
         <img
-          :src="`https://photokit.com/editor//assets/images/filters/square/${item.icon}.jpg`"
+          :src="getIconURL(item.icon)"
           alt="grayscale"
           :title="item.title"
           :class="[item.isChecked ? 'active' : '']"
         >
-        <!-- <div
-          v-if="item.isChecked && item.hasSetting"
-          class="mask-layer flex items-center content-center"
-          @click.stop="onSetting(item)"
-        >
-          <el-icon
-            :size="20"
-            color="blue"
-          >
-            <Setting />
-          </el-icon>
-        </div> -->
       </div>
       <span>{{ item.title }}</span>
     </div>
@@ -307,32 +187,36 @@ import gwen from '../imgs/gwen-spider-verse-ah.jpg'
 const gammaRed = ref(1)
 const gammaGreen = ref(1)
 const gammaBlue = ref(1)
-
-const contrast = ref(false)
-const contrastValue = ref(0.5)
-const saturation = ref(false)
-const saturationValue = ref(0)
-
-const vibrance = ref(false)
-const vibranceValue = ref(0)
-
-const hueRotation = ref(false)
-const hueRotationValue = ref(0)
-
-const blend = ref(false)
 const blendMode = ref('multiply')
 const blendColor = ref('#00f900')
 const blendAlpha = ref(1)
-const blendModeList = ['multiply', 'screen', 'add', 'diff', 'subtract', 'lighten', 'darken', 'exclusion', 'overlay', 'tint']
+const blendModeList = [
+  'multiply',
+  'screen',
+  'add',
+  'diff',
+  'subtract',
+  'lighten',
+  'darken',
+  'exclusion',
+  'overlay',
+  'tint'
+]
 
 const currentFilterConfig = ref({})
 const showSettingToolbar = ref(false)
 
 let canvas: fabric.Canvas, f: fabric.IAllFilters
-const applyFilter = (index: number, filter: fabric.IAllFilters | fabric.IInvertFilter) => {
+
+const getIconURL = (url: string) => {
+  return require(`../imgs/filter/${url}.jpeg`)
+}
+const applyFilter = (
+  index: number,
+  filter: fabric.IAllFilters | fabric.IInvertFilter
+) => {
   const obj = canvas.getActiveObject()
   if (!obj) return
-
   obj.filters[index] = filter
   obj.applyFilters()
   canvas.renderAll()
@@ -348,7 +232,7 @@ const applyFilterValue = (index: number, prop: any, value: any) => {
   }
 }
 
-const getFilter = (index) => {
+const getFilter = (index: number) => {
   const obj = canvas.getActiveObject()
   if (!obj) return
   return obj.filters[index]
@@ -405,7 +289,13 @@ const changeBrightnessValue = (value: number) => {
 }
 
 const changeGamma = (value: any) => {
-  applyFilter(10, value && new f.Gamma({ gamma: [gammaRed.value, gammaGreen.value, gammaBlue.value] }))
+  applyFilter(
+    10,
+    value &&
+      new f.Gamma({
+        gamma: [gammaRed.value, gammaGreen.value, gammaBlue.value]
+      })
+  )
 }
 
 const changeGammaRed = (value: number) => {
@@ -431,7 +321,7 @@ const changeGammaBlue = (value: number) => {
 }
 
 const changeContrast = (value: any) => {
-  applyFilter(11, value && new f.Contrast({ contrast: contrastValue.value }))
+  applyFilter(11, value && new f.Contrast())
 }
 
 const changeContrastValue = (value: number) => {
@@ -439,7 +329,10 @@ const changeContrastValue = (value: number) => {
 }
 
 const changeSaturation = (value: any) => {
-  applyFilter(12, value && new f.Saturation({ saturation: saturationValue.value }))
+  applyFilter(
+    12,
+    value && new f.Saturation()
+  )
 }
 
 const changeSaturationValue = (value: number) => {
@@ -447,7 +340,7 @@ const changeSaturationValue = (value: number) => {
 }
 
 const changeVibrance = (value: any) => {
-  applyFilter(13, value && new f.Vibrance({ vibrance: vibranceValue.value }))
+  applyFilter(13, value && new f.Vibrance())
 }
 
 const changeVibranceValue = (value: number) => {
@@ -455,7 +348,10 @@ const changeVibranceValue = (value: number) => {
 }
 
 const changeHueRotation = (value: any) => {
-  applyFilter(14, value && new f.HueRotation({ rotation: hueRotationValue.value }))
+  applyFilter(
+    14,
+    value && new f.HueRotation()
+  )
 }
 
 const changeHueRotationValue = (value: number) => {
@@ -478,7 +374,7 @@ const changePixelateValue = (value: number) => {
   applyFilterValue(16, 'blocksize', value)
 }
 
-const changeBlur = (value: any) => {
+const changeBlur = (value: boolean) => {
   applyFilter(17, value && new f.Blur())
 }
 
@@ -487,27 +383,35 @@ const changeBlurValue = (value: number) => {
 }
 
 const changeSharpen = (value: any) => {
-  applyFilter(18, value && new f.Convolute({
-    matrix: [0, -1, 0,
-      -1, 5, -1,
-      0, -1, 0]
-  }))
+  applyFilter(
+    18,
+    value &&
+      new f.Convolute({
+        matrix: [0, -1, 0, -1, 5, -1, 0, -1, 0]
+      })
+  )
 }
 
 const changeEmboss = (value: any) => {
-  applyFilter(19, value && new f.Convolute({
-    matrix: [1, 1, 1,
-      1, 0.7, -1,
-      -1, -1, -1]
-  }))
+  applyFilter(
+    19,
+    value &&
+      new f.Convolute({
+        matrix: [1, 1, 1, 1, 0.7, -1, -1, -1, -1]
+      })
+  )
 }
 
 const changeBlend = (value: any) => {
-  applyFilter(20, value && new f.BlendColor({
-    color: blendColor.value,
-    mode: blendMode.value,
-    alpha: blendAlpha.value
-  }))
+  applyFilter(
+    20,
+    value &&
+      new f.BlendColor({
+        color: blendColor.value,
+        mode: blendMode.value,
+        alpha: blendAlpha.value
+      })
+  )
 }
 const changBlendMode = (value: any) => {
   applyFilterValue(20, 'mode', value)
@@ -625,6 +529,9 @@ const filters = ref([
     value: 0.5,
     func: (bool: Boolean) => {
       changeBrightness(bool)
+    },
+    sliderFunc: (value: number) => {
+      changeBrightnessValue(value)
     }
   },
   {
@@ -652,6 +559,9 @@ const filters = ref([
     value: 700,
     func: (bool: Boolean) => {
       changeNoise(bool)
+    },
+    sliderFunc: (value: number) => {
+      changeNoiseValue(value)
     }
   },
   {
@@ -666,6 +576,9 @@ const filters = ref([
     value: 4,
     func: (bool: Boolean) => {
       changePixelate(bool)
+    },
+    sliderFunc: (value: number) => {
+      changePixelateValue(value)
     }
   },
   {
@@ -678,10 +591,82 @@ const filters = ref([
     max: 1,
     step: 0.01,
     value: 0.5,
-    func: (bool: Boolean) => {
+    func: (bool: boolean) => {
       changeBlur(bool)
+    },
+    sliderFunc: (value: number) => {
+      changeBlurValue(value)
     }
   },
+  {
+    icon: 'contrast',
+    title: 'Contrast',
+    isChecked: false,
+    hasSetting: true,
+    isSlider: true,
+    min: -1,
+    max: 1,
+    step: 0.01,
+    value: 0.5,
+    func: (bool: Boolean) => {
+      changeContrast(bool)
+    },
+    sliderFunc: (value: number) => {
+      changeContrastValue(value)
+    }
+  },
+  {
+    icon: 'saturation',
+    title: 'Saturation',
+    isChecked: false,
+    hasSetting: true,
+    isSlider: true,
+    min: -1,
+    max: 1,
+    step: 0.01,
+    value: 0.5,
+    func: (bool: Boolean) => {
+      changeSaturation(bool)
+    },
+    sliderFunc: (value: number) => {
+      changeSaturationValue(value)
+    }
+  },
+  {
+    icon: 'vibrance',
+    title: 'Vibrance',
+    isChecked: false,
+    hasSetting: true,
+    isSlider: true,
+    min: -1,
+    max: 1,
+    step: 0.01,
+    value: 0.5,
+    func: (bool: Boolean) => {
+      changeVibrance(bool)
+    },
+    sliderFunc: (value: number) => {
+      changeVibranceValue(value)
+    }
+  },
+  {
+    icon: 'hueRotation',
+    title: 'HueRotation',
+    isChecked: false,
+    hasSetting: true,
+    isSlider: true,
+    min: -1,
+    max: 1,
+    step: 0.01,
+    value: 0.5,
+    func: (bool: Boolean) => {
+      changeHueRotation(bool)
+    },
+    sliderFunc: (value: number) => {
+      changeHueRotationValue(value)
+    }
+  },
+
   {
     icon: 'emboss',
     title: 'Emboss',
@@ -692,7 +677,7 @@ const filters = ref([
   },
   {
     icon: 'blendColor',
-    title: 'Blend Color',
+    title: 'BlendColor',
     isChecked: false,
     hasSetting: true,
     isBlendColor: true,
@@ -703,23 +688,18 @@ const filters = ref([
 ])
 
 const init = () => {
-  fabric.Image.fromURL(gwen, img => {
-    canvas = new fabric.Canvas('filter-canvas', { width: img.width, height: img.height })
+  fabric.Image.fromURL(gwen, (img) => {
+    canvas = new fabric.Canvas('filter-canvas', {
+      width: img.width,
+      height: img.height
+    })
     f = fabric.Image.filters
     canvas.add(img)
   })
 }
 
-const changeSlider = (value) => {
-  if (currentFilterConfig.value.icon === 'brightness') {
-    changeBrightnessValue(value)
-  } else if (currentFilterConfig.value.icon === 'noise') {
-    changeNoiseValue(value)
-  } else if (currentFilterConfig.value.icon === 'pixelate') {
-    changePixelateValue(value)
-  } else if (currentFilterConfig.value.icon === 'blur') {
-    changeBlurValue(value)
-  }
+const changeSlider = (value: number) => {
+  currentFilterConfig.value.sliderFunc(value)
 }
 
 const onClickFilter = (item: any) => {
@@ -735,10 +715,10 @@ const onClickFilter = (item: any) => {
 }
 
 const onSave = () => {
-  const base64 = canvas.toDataURL({ format: 'png' })
+  const base64 = canvas.toDataURL({ format: 'jpeg' })
   const a = document.createElement('a')
   a.href = base64
-  a.download = 'default.png'
+  a.download = 'default.jpeg'
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
@@ -748,7 +728,6 @@ onMounted(() => {
   init()
   // setImg()
 })
-
 </script>
 
 <style lang="scss" scoped>
@@ -765,11 +744,11 @@ onMounted(() => {
 }
 
 .items-center {
-  align-items: center
+  align-items: center;
 }
 
 .content-center {
-  justify-content: center
+  justify-content: center;
 }
 
 .content-between {
@@ -795,7 +774,7 @@ onMounted(() => {
     right: 0;
     bottom: 0;
     background-color: #fff;
-    opacity: 0.8
+    opacity: 0.8;
   }
 
   img {

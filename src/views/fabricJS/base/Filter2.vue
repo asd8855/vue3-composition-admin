@@ -371,9 +371,6 @@ const blendColor = ref('#00f900')
 const blendAlpha = ref(1)
 const blendModeList = ['multiply', 'screen', 'add', 'diff', 'subtract', 'lighten', 'darken', 'exclusion', 'overlay', 'tint']
 
-// const getIconURL = (url: string) => {
-//   return new URL(`./imgs/filter/${url}.jpeg`, import.meta.url).href
-// }
 let canvas: fabric.Canvas, f: fabric.IAllFilters
 
 const applyFilter = (index: number, filter: fabric.IAllFilters | fabric.IInvertFilter) => {
