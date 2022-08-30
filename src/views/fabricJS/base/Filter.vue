@@ -1,5 +1,17 @@
 <template>
-  <h2>Fabric.js: 5.2.4</h2>
+  <div
+    class="flex items-center content-between"
+    style="padding: 0 32px"
+  >
+    <h2>Fabric.js: 5.2.4</h2>
+    <el-button
+      type="primary"
+      @click="onSave"
+    >
+      保存
+    </el-button>
+  </div>
+
   <div class="box flex content-center">
     <canvas
       id="filter-canvas"
@@ -137,6 +149,35 @@
         />
       </div>
     </div>
+    <div
+      v-else-if="currentFilterConfig.isRemoveColor"
+      class="flex content-between items-center"
+      style="width: 100%"
+    >
+      <div class="flex items-center">
+        <label>Color</label>
+        <el-color-picker
+          style="width: 70%"
+          v-model="removeColor"
+          size="large"
+          @change="changeRemoveColorValue"
+        />
+      </div>
+      <div
+        class="flex items-center"
+        style="width: 70%"
+      >
+        <label>Distance</label>
+        <el-slider
+          style="width: 70%"
+          v-model="removeColorDistance"
+          :min="0"
+          :max="1"
+          :step="0.01"
+          @change="changeRemoveColorDistance"
+        />
+      </div>
+    </div>
   </div>
   <div class="controls-wrapper flex">
     <div
@@ -146,7 +187,6 @@
       @click="onClickFilter(item)"
     >
       <div class="img-container">
-        <!-- :src="`https://photokit.com/editor//assets/images/filters/square/${item.icon}.jpg`" -->
         <img
           :src="getIconURL(item.icon)"
           alt="grayscale"
@@ -202,6 +242,9 @@ const blendModeList = [
   'overlay',
   'tint'
 ]
+
+const removeColor = ref('#00f900')
+const removeColorDistance = ref(0.5)
 
 const currentFilterConfig = ref({})
 const showSettingToolbar = ref(false)
@@ -425,6 +468,18 @@ const changeBlendAlpha = (value: any) => {
   applyFilterValue(20, 'alpha', value)
 }
 
+const changeRemoveColor = (value: any) => {
+  applyFilter(21, value && new f.RemoveColor({ distance: removeColorDistance.value, color: removeColor.value }))
+}
+
+const changeRemoveColorValue = (value: any) => {
+  applyFilterValue(21, 'color', value)
+}
+
+const changeRemoveColorDistance = (value: any) => {
+  applyFilterValue(21, 'distance', value)
+}
+
 const filters = ref([
   {
     icon: 'grayscale',
@@ -439,7 +494,7 @@ const filters = ref([
   },
   {
     icon: 'blackWhite',
-    title: 'Black & White',
+    title: 'Black&White',
     isChecked: false,
     func: (bool: Boolean) => {
       changeBW(bool)
@@ -509,14 +564,16 @@ const filters = ref([
       changeSepia(bool)
     }
   },
-  // {
-  //   icon: 'removeColor',
-  //   title: 'Remove Color',
-  //   isChecked: false,
-  //   func: (bool: Boolean) => {
-  //     changeRemoveColor(bool)
-  //   }
-  // },
+  {
+    icon: 'removeColor',
+    title: 'RemoveColor',
+    isChecked: false,
+    hasSetting: true,
+    isRemoveColor: true,
+    func: (bool: Boolean) => {
+      changeRemoveColor(bool)
+    }
+  },
   {
     icon: 'brightness',
     title: 'Brightness',
@@ -705,12 +762,9 @@ const changeSlider = (value: number) => {
 const onClickFilter = (item: any) => {
   item.isChecked = !item.isChecked
   item.func(item.isChecked)
-  if (item.hasSetting && item.isChecked) {
-    showSettingToolbar.value = true
-    currentFilterConfig.value = item
+  currentFilterConfig.value = item
+  if (item.hasSetting && item.isChecked && item.isSlider) {
     changeSlider(item.value)
-  } else {
-    showSettingToolbar.value = false
   }
 }
 
